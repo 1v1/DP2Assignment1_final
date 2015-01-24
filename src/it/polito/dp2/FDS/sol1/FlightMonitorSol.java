@@ -386,7 +386,7 @@ public class FlightMonitorSol implements FlightMonitor
 							if (validator.validateSeat(passengerSeat) == false)
 							{
 								if ( boarded == true )
-									throw new FlightMonitorException("Invalid seat");
+									throw new FlightMonitorException("The passenger is boarded but has no seat");
 								if ( ( !passengerSeat.isEmpty() ) && ( passengerSeat != null ) )
 									throw new FlightMonitorException("Invalid seat");
 							}
@@ -430,7 +430,7 @@ public class FlightMonitorSol implements FlightMonitor
 			throw new MalformedArgumentException("Invalid departure date argument");
 
 		for (FlightInstanceReader f:flightInstanceReaderList)
-			if ( ( f.getFlight().getNumber().equals(number) ) && ( f.getDate().equals(date)) )
+			if ( ( f.getFlight().getNumber().equals(number) ) && ( isEqual(f.getDate(), date)) )
 				return f;
 		return null;
 	}
@@ -464,20 +464,42 @@ public class FlightMonitorSol implements FlightMonitor
 		return returnList;
 			}
 
+	
 	private boolean isBefore(GregorianCalendar startDate, GregorianCalendar flightDate)
 	{
-		//Check if the startDate is before the flight date
-		if (flightDate.get(Calendar.YEAR) > startDate.get(Calendar.YEAR))
-			return true;
-		if(flightDate.get(Calendar.YEAR) == startDate.get(Calendar.YEAR))
-		{
-			if (flightDate.get(Calendar.MONTH) > startDate.get(Calendar.MONTH))
-				return true;
-			if (flightDate.get(Calendar.MONTH) == startDate.get(Calendar.MONTH))
-				if (flightDate.get(Calendar.DAY_OF_MONTH) >= startDate.get(Calendar.DAY_OF_MONTH))
-					return true;
-		}
-		return false;
+		/*
+		 * Check if the startDate is before the flight date.
+		 * 
+		 * I consider to compare the two dates, using only DAY_OF_MONTH, MONTH, YEAR and the TIMEZONE.
+		 * In order to do that, I reset all the meaningless fields of the two dates before comparing them.
+		 * I use the method after to compare the two dates, and I return the complement of the operation, 
+		 * to include also the dates that are equals.
+		 * 
+		 */
+		
+		flightDate.set(Calendar.HOUR, 0);
+		flightDate.set(Calendar.MINUTE, 0);
+		flightDate.set(Calendar.SECOND, 0);
+		flightDate.set(Calendar.MILLISECOND, 0);
+		
+		startDate.set(Calendar.HOUR, 0);
+		startDate.set(Calendar.MINUTE, 0);
+		startDate.set(Calendar.SECOND, 0);
+		startDate.set(Calendar.MILLISECOND, 0);
+		
+		return !startDate.after(flightDate);
+	}
+	
+	private boolean isEqual(GregorianCalendar flightDate, GregorianCalendar startDate)
+	{
+		if (flightDate.get(Calendar.YEAR) != startDate.get(Calendar.YEAR))
+			return false;
+		if (flightDate.get(Calendar.MONTH) != startDate.get(Calendar.MONTH))
+			return false;
+		if (flightDate.get(Calendar.DAY_OF_MONTH) != startDate.get(Calendar.DAY_OF_MONTH))
+			return false;
+		
+		return true;
 	}
 
 }
