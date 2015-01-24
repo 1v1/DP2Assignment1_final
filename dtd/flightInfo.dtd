@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!ELEMENT flightInfo (aircraftSet?, flight*)>
+<!ELEMENT flight (flightInstance*)>
+<!ELEMENT aircraftSet (aircraft*)>
+<!ATTLIST flight
+	flightID			ID			#REQUIRED
+	departureAirport 	NMTOKENS	#REQUIRED
+	departureTime		CDATA		#REQUIRED
+	destinationAirport	NMTOKENS	#REQUIRED
+>
+<!ELEMENT flightInstance (passenger*)>
+<!ATTLIST flightInstance
+	flightID			IDREF		#REQUIRED
+	departureGate		CDATA		"-"
+	departureDate		CDATA		#REQUIRED
+	status		(ARRIVED|BOARDING|BOOKING|CANCELLED|CHECKINGIN|DEPARTED)	"BOOKING"
+	delay				CDATA		"0"
+	aircraftModel		IDREF		#REQUIRED
+>
+<!ELEMENT aircraft (seat+)>
+<!ATTLIST aircraft
+	aircraftModel		ID		#REQUIRED
+>
+	
+<!ELEMENT seat (#PCDATA)>
+<!ELEMENT passenger (#PCDATA)>
+<!ATTLIST passenger
+	boarded			(true|false)	"false"
+	seat			CDATA			#IMPLIED
+	flightID		IDREF			#REQUIRED
+	departureDate	CDATA			#REQUIRED
+>
+	
+	

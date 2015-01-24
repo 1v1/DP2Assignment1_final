@@ -1,0 +1,11 @@
+I decided to create a very human-readable dtd file, which can also be easy to parse it.
+The root of the document is the flightInfo element, which is composed by a list of flight elements and a set of aircrafts.
+Every flight element has some attributes and all of them are required. Moreover flightID is an ID,
+ which is unique in the whole XML document and it's used to easily access flight data.
+ Then, I decided that every flight is composed by different flightInstances, each of them can be
+ uniquely identified by flightID and departureDate attributes.
+To make the whole document more human-readable and to reduce the number of redundancies, 
+I went for a nested design. In fact, my flightInstance element is composed by a list of passengers,  
+who have booked this flightInstance.
+To enforce the link between the passenger element and the flightInstance, I set flightID and 
+departureDate as attributes of the passenger element.
