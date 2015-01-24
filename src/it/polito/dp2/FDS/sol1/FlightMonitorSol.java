@@ -362,6 +362,8 @@ public class FlightMonitorSol implements FlightMonitor
 					
 					if (aircraftMap.isEmpty())
 						createAircrafts();
+					
+					Aircraft aircraft = aircraftMap.get(model);
 
 					Set<Passenger> pList=new HashSet<Passenger>();
 					// Get the passenger set of the FlightInstance
@@ -388,12 +390,24 @@ public class FlightMonitorSol implements FlightMonitor
 								if ( ( !passengerSeat.isEmpty() ) && ( passengerSeat != null ) )
 									throw new FlightMonitorException("Invalid seat");
 							}
+							
+							// Check if the seat assigned to the passenger exists in the aircraft
+//							boolean seatInTheAircraft = false;
+//							
+//							for (String aircraftSeat: aircraft.seats)
+//								if(aircraftSeat.equals(passengerSeat))
+//								{
+//									seatInTheAircraft = true;
+//									break;
+//								}
+//							
+//							if (!seatInTheAircraft)
+//								throw new FlightMonitorException("The seat assigned to the passenger doesn't exist in the aircraft");
 
 							Passenger passenger=new Passenger(name, boarded, passengerSeat);
 							pList.add(passenger);
 						}
 					}
-					Aircraft aircraft = aircraftMap.get(model);
 					FlightInstanceReader fr=new FlightInstanceReaderSol(getFlight(flightNumber), cal, delay, aircraft, flightStatus, gate, pList);
 					flightInstanceReaderList.add(fr);
 				}
